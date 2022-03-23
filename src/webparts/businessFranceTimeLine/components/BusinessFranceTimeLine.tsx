@@ -25,7 +25,6 @@ const stackTokens: IStackTokens = { childrenGap: 20 };
 
 export default class BusinessFranceTimeLine extends React.Component<IBusinessFranceTimeLineProps, IBusinessFranceTimeLineState> {
   private TimelineService: TimelineService = null;
-  private canEdit: any = null;
 
   constructor(props: IBusinessFranceTimeLineProps) {
     super(props);
@@ -41,8 +40,6 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
     this.onDismissPanel = this.onDismissPanel.bind(this);
     this.onChangeHandler = this.onChangeHandler.bind(this);
     this.getFilteredList = this.getFilteredList.bind(this);
-    let permission = new SPPermission(this.props.spcontext.pageContext.web.permissions.value);
-    this.canEdit = permission.hasPermission(SPPermission.manageWeb);
 
   }
 
