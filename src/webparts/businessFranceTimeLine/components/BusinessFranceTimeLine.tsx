@@ -3,7 +3,6 @@ import styles from './BusinessFranceTimeLine.module.scss';
 import { IBusinessFranceTimeLineProps } from './IBusinessFranceTimeLineProps';
 import { IBusinessFranceTimeLineState } from './IBusinessFranceTimeLineState';
 import { Callout } from '@fluentui/react';
-import { Link } from '@fluentui/react';
 import 'react-vertical-timeline-component/style.min.css';
 import './mystyle.css';
 import TimelineService from '../../../services/TimelineService';
@@ -106,19 +105,31 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
         {
           this.state.filteredActivities.map((activity, i) => {
             let { isCalloutVisible } = this.state;
+            let event :string;
+            let button: string;
+            let finish: string;
+            let heightLint: number = 60;
+            console.log('acivityEDate', activity.acivityEDate);
             let start = moment(activity.acivitySDate).format('Do MMMM');
-            let finish = moment(activity.acivityEDate).format('Do MMMM');
+            if(activity.acivityEDate !=null){
+                 finish = moment(activity.acivityEDate).format('Do MMMM');
+               event = `Date de début: ${start} - Date de fin: ${finish}`;
+               button = 'arrow';
+            }else{
+              event = `Date de début: ${start}`; 
+              button = 'circle';
+            }
+
             return (
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', height: '150px', width: '400px' }} className="sp-field-customFormatter">
-                  <div style={{ fontSize: '20px', width: '50%', textAlign: 'center' }}>{`Date de début: ${start} - Date de fin: ${finish}`}</div>
+                  <div style={{ fontSize: '20px', width: '50%', textAlign: 'center' }}>{event}</div>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', width: '50%' }}>
                     <div style={{ borderWidth: '2px', borderStyle: 'solid', height: '60px' }}
                       className="ms-borderColor-neutralSecondary" ></div>
                     <div className='ms-Callout-Custom'>
                       <div className='ms-CalloutBasicExample-buttonArea' ref={(menuButton) => this.menuButtonElement = menuButton}>
-                        <div style={{ height: '30px', width: '30px', borderRadius: '50%', cursor: 'pointer', outline: 'none', backgroundColor: 'rgb(152, 111, 11)' }}
-                          onClick={ this.onShowMenuClicked }  className="ms-bgColor-themePrimary"></div>
+                        <div onClick={this.onShowMenuClicked} className={`${button} ms-bgColor-themePrimary`}></div>
                       </div>
                       {isCalloutVisible && (
                         <Callout
@@ -158,6 +169,7 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
     );
   }
 
+
   public componentDidMount(): void {
     this.TimelineService.getTimelineActivities('Events', 'asc').then((activities: ITimelineActivity[]) => {
       this.setState({
@@ -169,6 +181,7 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
     });
 
     this.TimelineService.getTimelineOptions('Events', 'asc').then((options: IDropdownOption[]) => {
+      
       this.setState({
         options: options,
       });
@@ -177,8 +190,6 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
     });
 
   }
-
-
 
   public componentWillReceiveProps(nextProps: IBusinessFranceTimeLineProps) {
     if (this.props.datetime !== nextProps.datetime) {
@@ -191,6 +202,7 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
         this.setState({ timelineActivities: [] });
       });
       this.TimelineService.getTimelineOptions('Events', 'asc', nextProps.datetime.value).then((options: IDropdownOption[]) => {
+
         this.setState({ options: options });
       }).catch((error: any) => {
         this.setState({ options: [] });

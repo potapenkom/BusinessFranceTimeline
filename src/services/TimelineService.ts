@@ -16,6 +16,7 @@ export default class TimelineService {
 
     public async getTimelineActivities(listId: string, sortOrder: string, dDebute: Date = new Date()): Promise<ITimelineActivity[]> {
         let returnTimelineActivities: ITimelineActivity[] = [];
+
         let sortOrderAsc: boolean = (sortOrder === "asc");
         let filterString = `DateDeDebut ge datetime'${dDebute.toISOString()}''`;
         try {
@@ -57,8 +58,7 @@ export default class TimelineService {
 
 
     public async getTimelineOptions(listId: string, sortOrder: string, dDebute: Date = new Date()): Promise<IDropdownOption[]> {
-        let returnTimelineActivities: IDropdownOption[] = [{key:'All', text:'All'}];
-
+        let returnTimelineActivities: IDropdownOption[] = [{ key: 'All', text: 'All' }];
         let filterString = `DateDeDebut ge datetime'${dDebute.toISOString()}''`;
         try {
             let activities: any[] = await sp.web.lists.getByTitle(listId).items
@@ -70,13 +70,15 @@ export default class TimelineService {
                     key: activity.Direction,
                     text: activity.Direction
                 };
+
                 returnTimelineActivities.push(timelineActivity);
+
             });
         }
         catch (error) {
             return Promise.reject(error);
         }
-        console.log('options ', returnTimelineActivities);
+
         return returnTimelineActivities;
     }
 
