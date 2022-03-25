@@ -1,4 +1,4 @@
-import * as React from 'react';
+/*import * as React from 'react';
 import styles from './BusinessFranceTimeLine.module.scss';
 import { IBusinessFranceTimeLineProps } from './IBusinessFranceTimeLineProps';
 import { IBusinessFranceTimeLineState } from './IBusinessFranceTimeLineState';
@@ -34,31 +34,18 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
       options: [],
       filteredActivities: [],
       isloading: false,
-      isCalloutVisible: false
-
+    
     };
 
-    this.onShowMenuClicked = this.onShowMenuClicked.bind(this);
-    this.onCalloutDismiss = this.onCalloutDismiss.bind(this);
     this.TimelineService = new TimelineService(this.props.spcontext);
     this.onDismissPanel = this.onDismissPanel.bind(this);
     this.onChangeHandler = this.onChangeHandler.bind(this);
     this.getFilteredList = this.getFilteredList.bind(this);
-
+    
   }
+ 
 
-
-  private onShowMenuClicked() {
-    this.setState({
-      isCalloutVisible: !this.state.isCalloutVisible
-    });
-  }
-
-  private onCalloutDismiss() {
-    this.setState({
-      isCalloutVisible: false
-    });
-  }
+  
 
 
   private async onDismissPanel(refresh: boolean) {
@@ -105,50 +92,58 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
         </Stack>
         {
           this.state.filteredActivities.map((activity, i) => {
-            let { isCalloutVisible } = this.state;
             let start = moment(activity.acivitySDate).format('Do MMMM');
             let finish = moment(activity.acivityEDate).format('Do MMMM');
             return (
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', height: '150px', width: '400px' }} className="sp-field-customFormatter">
-                  <div style={{ fontSize: '20px', width: '50%', textAlign: 'center' }}>{`Date de début: ${start} - Date de fin: ${finish}`}</div>
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', width: '50%' }}>
-                    <div style={{ borderWidth: '2px', borderStyle: 'solid', height: '60px' }}
-                      className="ms-borderColor-neutralSecondary" ></div>
-                    <div className='ms-Callout-Custom'>
-                      <div className='ms-CalloutBasicExample-buttonArea' ref={(menuButton) => this.menuButtonElement = menuButton}>
-                        <div style={{ height: '30px', width: '30px', borderRadius: '50%', cursor: 'pointer', outline: 'none', backgroundColor: 'rgb(152, 111, 11)' }}
-                          onClick={ this.onShowMenuClicked }  className="ms-bgColor-themePrimary"></div>
-                      </div>
-                      {isCalloutVisible && (
-                        <Callout
-                          className='ms-CalloutExample-callout'
-                          ariaLabelledBy={'callout-label-1'}
-                          ariaDescribedBy={'callout-description-1'}
-                          role={'alertdialog'}
-                          gapSpace={0}
-                          target={this.menuButtonElement}
-                          onDismiss={this.onCalloutDismiss}
-                          setInitialFocus={true}>
-                          <div style={{ display: 'flex', flexDirection: 'column', height: '200px', width: '450px' }} className="sp-field-customFormatter">
-                            <div style={{ height: '20%', width: '100%', backgroundColor: 'rgb(152, 111, 11)', color: 'white', fontSize: '20px', display: 'flex', alignItems: 'center', paddingLeft: '40px' }}
-                              className="ms-bgColor-themePrimary">
-                              <p>{`Date de début: ${start} - Date de fin: ${finish}`}</p>
-                              <p>{`Nom du temps fort: ${activity.activityTitle} `}</p>
+              <div className="ms-List" role="presentation">
+                <div role="presentation" className="ms-List-surface">
+                  <div className="ms-List-page" role="presentation">
+                    <div role="presentation" className="ms-List-cell" data-list-index="0" data-automationid="ListCell">
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', height: '150px', width: '400px' }} className="sp-field-customFormatter">
+                          <div style={{ fontSize: '20px', width: '50%', textAlign: 'center' }}>{`Date de début: ${start} - Date de fin: ${finish}`}</div>
+                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', width: '50%' }}>
+                            <div style={{ borderWidth: '2px', borderStyle: 'solid', height: '60px' }}
+                              className="ms-borderColor-neutralSecondary" ></div>
+                            <div className='ms-Callout-Custom'>
+                              <div className='ms-CalloutBasicExample-buttonArea' ref={(menuButton) => this.menuButtonElement = menuButton}>
+                                <div style={{ height: '30px', width: '30px', borderRadius: '50%', cursor: 'pointer', outline: 'none', backgroundColor: 'rgb(152, 111, 11)' }}
+                                  data-custom-card-path="#.1.1" data-event-trigger="click" id="0_#.1.1_Title_0"
+                                  data-is-focusable="true" className="ms-bgColor-themePrimary"></div>
+                              </div>
+                              {isCalloutVisible && (
+                                <Callout
+                                  className='ms-CalloutExample-callout'
+                                  ariaLabelledBy={'callout-label-1'}
+                                  ariaDescribedBy={'callout-description-1'}
+                                  role={'alertdialog'}
+                                  gapSpace={0}
+                                  target={this.menuButtonElement}
+                                  onDismiss={this.onCalloutDismiss}
+                                  setInitialFocus={true}>
+                                  <div style={{ display: 'flex', flexDirection: 'column', height: '200px', width: '450px' }} className="sp-field-customFormatter">
+                                    <div style={{ height: '20%', width: '100%', backgroundColor: 'rgb(152, 111, 11)', color: 'white', fontSize: '20px', display: 'flex', alignItems: 'center', paddingLeft: '40px' }}
+                                      className="ms-bgColor-themePrimary">
+                                      <p>{`Date de début: ${start} - Date de fin: ${finish} `}</p>
+                                      <p>${`Nom du temps fort: ${activity.activityTitle} `}</p>
+                                    </div>
+                                    <div className='callout-label-1' style={{ height: '80%', width: '90%', paddingTop: '10px', paddingLeft: '40px' }}>
+                                      <p>{`Direction: ${activity.activityDirection}`} </p>
+                                      <p>{`Pilote: ${activity.activityPilote}`}</p>
+                                      <p>{`Description: ${activity.activityDescription}`}</p>
+                                      <p>{`Actions à mener: ${activity.activityActions}`}</p>
+                                      <a href={activity.activityLink}>Lien pour enregistrer</a>                             
+                                    </div>
+                                  </div>
+                                </Callout>
+                              )}
                             </div>
-                            <div className='callout-label-1' style={{ height: '80%', width: '90%', paddingTop: '10px', paddingLeft: '40px' }}>
-                              <p>{`Direction: ${activity.activityDirection}`}</p>
-                              <p>{`Pilote: ${activity.activityPilote}`}</p>
-                              <p>{`Description: ${activity.activityDescription}`}</p>
-                              <p>{`Actions à mener: ${activity.activityActions}`}</p>
-                              <a href={activity.activityLink}>Lien pour enregistrer</a>
-                            </div>
+                            <div style={{ borderWidth: '2px', borderStyle: 'solid', height: '60px' }}
+                              className="ms-borderColor-neutralSecondary"></div>
                           </div>
-                        </Callout>
-                      )}
+                        </div>
+                      </div>
                     </div>
-                    <div style={{ borderWidth: '2px', borderStyle: 'solid', height: '60px' }}
-                      className="ms-borderColor-neutralSecondary"></div>
                   </div>
                 </div>
               </div>
@@ -201,3 +196,4 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
 
 
 
+*/

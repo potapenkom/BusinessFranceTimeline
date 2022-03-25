@@ -1,13 +1,34 @@
-.vertical-timeline::before {  
-    content: "";  
-    position: absolute;  
-    top: 0px;  
-    left: 18px;  
-    height: 100%;  
-    width: 4px;  
-    background:black!important;  
-  } 
+  * {
+  box-sizing: border-box;
+}
 
-  .vertical-timeline--two-columns .vertical-timeline-element-content .vertical-timeline-element-date {
-    margin: 0px 5px;
-  }
+.circle{
+  height: 30px; 
+  width:  30px; 
+  border-radius: 50%;
+  cursor: pointer;
+  outline: none;
+  background-color: rgb(152, 111, 11);
+}
+
+.arrow{
+  display: block;
+  margin: 30px auto;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  border-top: 10px solid rgb(152, 111, 11);
+  border-left: 10px solid rgb(152, 111, 11);
+   transform: rotate(225deg);
+}
+.arrow::after{
+  content: "";
+  display: block;
+  width: 12px;
+  height: 55px;
+  background-color: rgb(152, 111, 11);
+  transform: rotate(-45deg) translate(16px, 4px);
+  left: 0;
+  top: 0;
+}
+
