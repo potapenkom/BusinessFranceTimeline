@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {createRef} from 'react';
 import styles from './BusinessFranceTimeLine.module.scss';
 import { IBusinessFranceTimeLineProps } from './IBusinessFranceTimeLineProps';
 import { IBusinessFranceTimeLineState } from './IBusinessFranceTimeLineState';
@@ -19,12 +20,11 @@ const dropdownStyles: Partial<IDropdownStyles> = {
   dropdown: { width: 300 },
 };
 
-
 const stackTokens: IStackTokens = { childrenGap: 20 };
 
 export default class BusinessFranceTimeLine extends React.Component<IBusinessFranceTimeLineProps, IBusinessFranceTimeLineState> {
   private TimelineService: TimelineService = null;
-  private menuButtonElement: HTMLElement;
+  private menuButtonElement: HTMLElement; 
   constructor(props: IBusinessFranceTimeLineProps) {
     super(props);
 
@@ -46,7 +46,6 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
 
   }
 
-
   private onShowMenuClicked() {
     this.setState({
       isCalloutVisible: !this.state.isCalloutVisible
@@ -58,7 +57,6 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
       isCalloutVisible: false
     });
   }
-
 
   private async onDismissPanel(refresh: boolean) {
     if (refresh === true) {
@@ -81,8 +79,6 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
     }
   }
 
-
-
   private onChangeHandler(event: React.FormEvent<HTMLDivElement>, item: IDropdownOption) {
     this.getFilteredList(item.key as string);
   }
@@ -90,7 +86,7 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
   public render(): React.ReactElement<IBusinessFranceTimeLineProps> {
     moment.locale('fr');
     moment.locale();
-
+    let menuButtonElement = createRef<HTMLDivElement>();
     return (
       <div style={divStyle}>
         <Stack tokens={stackTokens}>
@@ -109,7 +105,6 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
             let button: string;
             let finish: string;
             let heightLint: number = 60;
-            console.log('acivityEDate', activity.acivityEDate);
             let start = moment(activity.acivitySDate).format('Do MMMM');
             if(activity.acivityEDate !=null){
                  finish = moment(activity.acivityEDate).format('Do MMMM');
@@ -119,7 +114,6 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
               event = `Date de début: ${start}`; 
               button = 'circle';
             }
-
             return (
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', height: '150px', width: '400px' }} className="sp-field-customFormatter">
@@ -127,13 +121,13 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', width: '50%' }}>
                     <div style={{ borderWidth: '2px', borderStyle: 'solid', height: '60px' }}
                       className="ms-borderColor-neutralSecondary" ></div>
-                    <div className='ms-Callout-Custom'>
+                    <div className='ms-Callout'>
                       <div className='ms-CalloutBasicExample-buttonArea' ref={(menuButton) => this.menuButtonElement = menuButton}>
                         <div onClick={this.onShowMenuClicked} className={`${button} ms-bgColor-themePrimary`}></div>
                       </div>
                       {isCalloutVisible && (
                         <Callout
-                          className='ms-CalloutExample-callout'
+                          className='ms-Callout-callout'
                           ariaLabelledBy={'callout-label-1'}
                           ariaDescribedBy={'callout-description-1'}
                           role={'alertdialog'}
@@ -169,7 +163,6 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
     );
   }
 
-
   public componentDidMount(): void {
     this.TimelineService.getTimelineActivities('Events', 'asc').then((activities: ITimelineActivity[]) => {
       this.setState({
@@ -179,7 +172,7 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
     }).catch((error: any) => {
       this.setState({ timelineActivities: [] });
     });
-
+    
     this.TimelineService.getTimelineOptions('Events', 'asc').then((options: IDropdownOption[]) => {
       
       this.setState({
@@ -188,7 +181,6 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
     }).catch((error: any) => {
       this.setState({ options: [] });
     });
-
   }
 
   public componentWillReceiveProps(nextProps: IBusinessFranceTimeLineProps) {

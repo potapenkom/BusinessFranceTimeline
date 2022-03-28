@@ -56,7 +56,6 @@ export default class TimelineService {
         return returnTimelineActivities;
     }
 
-
     public async getTimelineOptions(listId: string, sortOrder: string, dDebute: Date = new Date()): Promise<IDropdownOption[]> {
         let returnTimelineActivities: IDropdownOption[] = [{ key: 'All', text: 'All' }];
         let filterString = `DateDeDebut ge datetime'${dDebute.toISOString()}''`;
@@ -65,10 +64,13 @@ export default class TimelineService {
                 .select("Id", "Direction")
                 .filter(filterString)
                 .get();
-            activities.forEach(activity => {
+           let filter = activities.map(item => item.Direction)
+                .filter((value, index, self) => self.indexOf(value) === index);
+                filter.forEach(activity => {
+                    console.log('activity ',activity)
                 let timelineActivity = {
-                    key: activity.Direction,
-                    text: activity.Direction
+                    key: activity,
+                    text: activity
                 };
 
                 returnTimelineActivities.push(timelineActivity);
