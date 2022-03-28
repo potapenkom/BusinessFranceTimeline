@@ -1,9 +1,9 @@
 import * as React from 'react';
-import {createRef} from 'react';
+import { createRef } from 'react';
 import styles from './BusinessFranceTimeLine.module.scss';
 import { IBusinessFranceTimeLineProps } from './IBusinessFranceTimeLineProps';
 import { IBusinessFranceTimeLineState } from './IBusinessFranceTimeLineState';
-import { Callout } from '@fluentui/react';
+import { Callout, DirectionalHint } from '@fluentui/react';
 import 'react-vertical-timeline-component/style.min.css';
 import './mystyle.css';
 import TimelineService from '../../../services/TimelineService';
@@ -24,7 +24,8 @@ const stackTokens: IStackTokens = { childrenGap: 20 };
 
 export default class BusinessFranceTimeLine extends React.Component<IBusinessFranceTimeLineProps, IBusinessFranceTimeLineState> {
   private TimelineService: TimelineService = null;
-  private menuButtonElement: HTMLElement; 
+  private menuButtonElement: HTMLElement;
+  private _menuButtonElement = createRef<HTMLDivElement>();
   constructor(props: IBusinessFranceTimeLineProps) {
     super(props);
 
@@ -86,7 +87,6 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
   public render(): React.ReactElement<IBusinessFranceTimeLineProps> {
     moment.locale('fr');
     moment.locale();
-    let menuButtonElement = createRef<HTMLDivElement>();
     return (
       <div style={divStyle}>
         <Stack tokens={stackTokens}>
@@ -101,17 +101,22 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
         {
           this.state.filteredActivities.map((activity, i) => {
             let { isCalloutVisible } = this.state;
-            let event :string;
+            let event: string;
             let button: string;
             let finish: string;
             let heightLint: number = 60;
             let start = moment(activity.acivitySDate).format('Do MMMM');
-            if(activity.acivityEDate !=null){
-                 finish = moment(activity.acivityEDate).format('Do MMMM');
-               event = `Date de début: ${start} - Date de fin: ${finish}`;
-               button = 'arrow';
-            }else{
-              event = `Date de début: ${start}`; 
+            if (activity.acivityEDate != null) {
+              finish = moment(activity.acivityEDate).format('Do MMMM');
+              event = `Date de début: ${start} - Date de fin: ${finish}`;
+              button = 'arrow';
+              var duration = moment.duration(moment(activity.acivityEDate).diff(moment(activity.acivitySDate)));
+              var days = Math.round(duration.asDays());
+              console.log('days ', days);
+              heightLint = heightLint * days;
+              console.log('heightLint ', heightLint);
+            } else {
+              event = `Date de début: ${start}`;
               button = 'circle';
             }
             return (
@@ -122,7 +127,7 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
                     <div style={{ borderWidth: '2px', borderStyle: 'solid', height: '60px' }}
                       className="ms-borderColor-neutralSecondary" ></div>
                     <div className='ms-Callout'>
-                      <div className='ms-CalloutBasicExample-buttonArea' ref={(menuButton) => this.menuButtonElement = menuButton}>
+                      <div className='ms-CalloutBasicExample-buttonArea' ref={this._menuButtonElement}>
                         <div onClick={this.onShowMenuClicked} className={`${button} ms-bgColor-themePrimary`}></div>
                       </div>
                       {isCalloutVisible && (
@@ -132,8 +137,9 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
                           ariaDescribedBy={'callout-description-1'}
                           role={'alertdialog'}
                           gapSpace={0}
-                          target={this.menuButtonElement}
+                          target={this._menuButtonElement}
                           onDismiss={this.onCalloutDismiss}
+                          directionalHint={DirectionalHint.rightCenter}
                           setInitialFocus={true}>
                           <div style={{ display: 'flex', flexDirection: 'column', height: '200px', width: '450px' }} className="sp-field-customFormatter">
                             <div style={{ height: '20%', width: '100%', backgroundColor: 'rgb(152, 111, 11)', color: 'white', fontSize: '20px', display: 'flex', alignItems: 'center', paddingLeft: '40px' }}
@@ -172,9 +178,9 @@ export default class BusinessFranceTimeLine extends React.Component<IBusinessFra
     }).catch((error: any) => {
       this.setState({ timelineActivities: [] });
     });
-    
+
     this.TimelineService.getTimelineOptions('Events', 'asc').then((options: IDropdownOption[]) => {
-      
+
       this.setState({
         options: options,
       });
